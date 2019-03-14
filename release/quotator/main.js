@@ -87,7 +87,8 @@ var APIBase = /** @class */ (function () {
         return observable.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (res) { return JSON.parse(JSON.stringify(res)); }));
     };
     APIBase.prototype.urlFor = function (path) {
-        return "http://localhost:5000" + path;
+        // return `http://localhost:5000${path}`; // development
+        return "/api" + path; // production
     };
     APIBase.accessToken = null;
     APIBase.token = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
