@@ -144,7 +144,10 @@ sudo apt install -y python3-pip python3-dev build-essential libssl-dev\
 
 sudo pip3 install wheel uwsgi Flask Flask-Cors pycups
 
-tee dist/quotator.ini << EOF
+git clone https://github.com/acristoffers/quotator
+cd quotator
+
+tee release/quotator.ini << EOF
 [uwsgi]
 module = wsgi:app
 
@@ -158,7 +161,7 @@ vacuum = true
 die-on-term = true
 EOF
 
-tee dist/quotator.service << EOF
+sudo tee /etc/systemd/system/quotator.service << EOF
 [Unit]
 Description=Quotator uWSGI
 After=network.target
@@ -174,8 +177,7 @@ ExecStart=/usr/local/bin/uwsgi --ini myproject.ini
 WantedBy=multi-user.target
 EOF
 
-sudo cp dist /var/www/quotator
-sudo cp dist/quotator.service /etc/systemd/system/
+sudo cp release /var/www/quotator
 
 sudo systemctl start quotator
 sudo systemctl enable quotator
