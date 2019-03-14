@@ -259,7 +259,7 @@ http {
     root /var/www/quotator/quotator;
 
     location / {
-      try_files \$uri index.html;
+      try_files \$uri /index.html;
       expires 1w;
       add_header Cache-Control public;
       gzip_static on;
@@ -278,7 +278,7 @@ http {
     server_name    da-impressora;
     
     location / {
-      return  307 https://$server_name$request_uri;
+      return  307 https://\$host\$request_uri;
     }
   }
 }
