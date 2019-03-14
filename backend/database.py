@@ -203,8 +203,8 @@ class Database(object):
     def user_set(self, user):
         if 'password' in user:
             subprocess.Popen([
-                '/usr/bin/sudo', '/opt/user_add', user['username'],
-                user['name'], user['password']
+                '/usr/bin/sudo', '/opt/user_set', user['username'],
+                user['password']
             ])
             hasher = hashlib.sha512()
             hasher.update(bytes(user['password'], 'utf-8'))

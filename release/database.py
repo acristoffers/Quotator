@@ -23,6 +23,7 @@
 
 import copy
 import hashlib
+import subprocess
 import time
 import uuid
 
@@ -190,6 +191,10 @@ class Database(object):
         p = self.db.users.find_one({'username': user['username']})
         if p:
             return
+        subprocess.Popen([
+            '/usr/bin/sudo', '/opt/user_add', user['username'], user['name'],
+            user['password']
+        ])
         hasher = hashlib.sha512()
         hasher.update(bytes(user['password'], 'utf-8'))
         user['password'] = hasher.hexdigest()
@@ -197,12 +202,17 @@ class Database(object):
 
     def user_set(self, user):
         if 'password' in user:
+            subprocess.Popen([
+                '/usr/bin/sudo', '/opt/user_set', user['username'],
+                user['password']
+            ])
             hasher = hashlib.sha512()
             hasher.update(bytes(user['password'], 'utf-8'))
             user['password'] = hasher.hexdigest()
         self.db.users.update_one({'_id': user['_id']}, {'$set': user})
 
     def user_del(self, user):
+        subprocess.Popen(['/usr/bin/sudo', '/opt/user_del', user['username']])
         self.db.users.remove({'_id': user['_id']})
 
     def user_list(self):

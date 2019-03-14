@@ -15,6 +15,7 @@ sudo addgroup nologin
 
 echo 'DenyGroups nologin\nPermitRootLogin no' | sudo tee -a /etc/ssh/sshd_config
 
+pushd ~
 tee -a .bashrc << EOF
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -27,6 +28,7 @@ then
 fi
 EOF
 mv .bashrc .profile
+popd
 
 ################################################################################
 ###                                                                          ###
@@ -292,7 +294,16 @@ sudo tee /opt/user_add << EOF
 sudo adduser --disabled-password --no-create-home --shell /bin/false --gecos "\$2,,,," \$1
 sudo usermod -aG samba \$1
 sudo usermod -aG nologin \$1
-(echo \$3; echo \$3) | sudo smbpasswd -a \$1 -s
+(echo \$3; echo \$3) | sudo smbpasswd -s -a \$1
+EOF
+
+sudo tee /opt/user_set << EOF
+#!/bin/bash
+
+# \$1 username
+# \$2 password
+
+(echo \$2; echo \$2) | sudo smbpasswd -s \$1
 EOF
 
 sudo tee /opt/user_del << EOF
@@ -311,6 +322,7 @@ sudo chgrp www-data /opt/*
 
 sudo tee -a /etc/sudoers << EOF
 www-data ALL=(ALL) NOPASSWD: /opt/user_add
+www-data ALL=(ALL) NOPASSWD: /opt/user_set
 www-data ALL=(ALL) NOPASSWD: /opt/user_del
 EOF
 
