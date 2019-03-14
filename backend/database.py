@@ -192,7 +192,8 @@ class Database(object):
         if p:
             return
         subprocess.Popen([
-            '/opt/user_add', user['username'], user['name'], user['password']
+            '/usr/bin/sudo', '/opt/user_add', user['username'], user['name'],
+            user['password']
         ])
         hasher = hashlib.sha512()
         hasher.update(bytes(user['password'], 'utf-8'))
@@ -202,8 +203,8 @@ class Database(object):
     def user_set(self, user):
         if 'password' in user:
             subprocess.Popen([
-                '/opt/user_add', user['username'], user['name'],
-                user['password']
+                '/usr/bin/sudo', '/opt/user_add', user['username'],
+                user['name'], user['password']
             ])
             hasher = hashlib.sha512()
             hasher.update(bytes(user['password'], 'utf-8'))
@@ -211,7 +212,7 @@ class Database(object):
         self.db.users.update_one({'_id': user['_id']}, {'$set': user})
 
     def user_del(self, user):
-        subprocess.Popen(['/opt/user_del', user['username']])
+        subprocess.Popen(['/usr/bin/sudo', '/opt/user_del', user['username']])
         self.db.users.remove({'_id': user['_id']})
 
     def user_list(self):
