@@ -7,7 +7,7 @@
       <input matInput name="name" [placeholder]="'Name' | translate" [(ngModel)]="user.name">
     </mat-form-field>
 
-    <mat-form-field class="width-100" *ngIf="user._id != null">
+    <mat-form-field class="width-100" *ngIf="user._id == null">
       <input matInput name="username" autocomplete="username" [placeholder]="'Username' | translate" [(ngModel)]="user.username">
     </mat-form-field>
 
