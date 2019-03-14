@@ -1,0 +1,28 @@
+<mat-card-title>
+  {{ 'Quota' | translate }}
+</mat-card-title>
+<mat-card-content id="manage-polices-dialog" flex-col>
+  <mat-form-field>
+    <mat-select [placeholder]="'User' | translate" [(ngModel)]="quota.user">
+      <mat-option *ngFor="let user of users" [value]="user._id">
+        {{ user.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="quota.user">
+    <mat-select [placeholder]="'Policy' | translate" [(ngModel)]="quota.policy">
+      <mat-option *ngFor="let policy of userPolices()" [value]="policy._id">
+        {{ policy.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="width-100" *ngIf="quota.policy">
+    <input matInput type="number" [placeholder]="'Quantity' | translate" [(ngModel)]="quota.quantity">
+  </mat-form-field>
+</mat-card-content>
+<mat-card-actions>
+  <button mat-flat-button color="primary" (click)="save()">{{ 'Save' | translate }}</button>
+  <button mat-stroked-button (click)="cancel()">{{ 'Cancel' | translate }}</button>
+</mat-card-actions>

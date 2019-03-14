@@ -1,0 +1,9 @@
+<mat-nav-list id="sidenav">
+  <a mat-list-item routerLink="connect" routerLinkActive="active-list-item">
+    {{ 'Connection' | translate }}
+  </a>
+
+  <a mat-list-item [routerLink]="button.route" routerLinkActive="active-list-item" *ngFor="let button of buttons()">
+    {{ button.text | translate }}
+  </a>
+</mat-nav-list>

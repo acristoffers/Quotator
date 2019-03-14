@@ -1,0 +1,36 @@
+<div flex-col>
+  <div id="manage-groups">
+    <mat-card>
+      <mat-card-title>
+        {{ 'Manage Groups' | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <mat-form-field class="width-100">
+          <input matInput [placeholder]="'Filter' | translate" [(ngModel)]="filter">
+        </mat-form-field>
+
+        <mat-list>
+          <mat-list-item *ngFor="let group of filteredGroups()">
+            <div flex class="width-100">
+              <span stretch>{{ group.name }}</span>
+              <button mat-icon-button (click)="edit(group)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="remove(group)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+      <mat-card-actions flex>
+        <mat-form-field stretch>
+          <input matInput [placeholder]="'Name' | translate" [(ngModel)]="newGroup.name" (keydown.enter)="addGroup()">
+        </mat-form-field>
+        <button mat-flat-button color="primary" (click)="addGroup()">
+          {{ 'Add' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

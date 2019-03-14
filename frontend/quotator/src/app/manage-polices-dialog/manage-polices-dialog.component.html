@@ -1,0 +1,27 @@
+<mat-card-title>
+  {{ 'Policy' | translate }}
+</mat-card-title>
+<mat-card-content id="manage-polices-dialog" flex-col>
+  <mat-form-field class="width-100">
+    <input matInput [placeholder]="'Name' | translate" [(ngModel)]="policy.name">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select [placeholder]="'Printers' | translate" [(ngModel)]="policy.printers" multiple>
+      <mat-option *ngFor="let printer of printers" [value]="printer.id">
+        {{ printer.name || printer.id }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select [placeholder]="'Groups' | translate" [(ngModel)]="policy.groups" multiple>
+      <mat-option *ngFor="let group of groups" [value]="group._id">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-slide-toggle [(ngModel)]="policy.ifty_quota">{{ 'Infinite Quota' | translate }}</mat-slide-toggle>
+</mat-card-content>
+<mat-card-actions>
+  <button mat-flat-button color="primary" (click)="save()">{{ 'Save' | translate }}</button>
+  <button mat-stroked-button (click)="cancel()">{{ 'Cancel' | translate }}</button>
+</mat-card-actions>

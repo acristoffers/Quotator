@@ -1,0 +1,81 @@
+<div flex-col>
+  <div id="reports">
+    <mat-card>
+      <mat-card-title>
+        {{ 'Reports' | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <mat-tab-group [dynamicHeight]="true" mat-stretch-tabs>
+          <mat-tab [label]="'Reports' | translate">
+            <table mat-table [dataSource]="reports" class="mat-elevation-z8">
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Action' | translate }} </th>
+                <td mat-cell width="20%" *matCellDef="let report"> {{ report.action }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef> {{ 'User' | translate }} </th>
+                <td mat-cell width="20%" *matCellDef="let report"> {{ report.user.username }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Time' | translate }} </th>
+                <td mat-cell width="20%" *matCellDef="let report"> {{ report.time | date:'long' }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="params">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Parameter' | translate }} </th>
+                <td mat-cell *matCellDef="let report"> {{ dumps(report.params) }} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </mat-tab>
+
+          <mat-tab [label]="'Jobs' | translate">
+            <table mat-table [dataSource]="jobs" class="mat-elevation-z8">
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Status </th>
+                <td mat-cell *matCellDef="let job"> {{ job.status }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef> {{ 'User' | translate }} </th>
+                <td mat-cell *matCellDef="let job"> {{ job.user }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="job">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Job' | translate }} </th>
+                <td mat-cell *matCellDef="let job"> {{ job.job }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Title' | translate }} </th>
+                <td mat-cell *matCellDef="let job"> {{ job.title }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="copies">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Copies' | translate }} </th>
+                <td mat-cell *matCellDef="let job"> {{ job.copies }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="pages">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Pages' | translate }} </th>
+                <td mat-cell *matCellDef="let job"> {{ job.pages }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef> {{ 'Pages' | translate }} </th>
+                <td mat-cell *matCellDef="let job"> {{ job.time | date }} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedJobsColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedJobsColumns;"></tr>
+            </table>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

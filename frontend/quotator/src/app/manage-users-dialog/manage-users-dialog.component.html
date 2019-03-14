@@ -1,0 +1,31 @@
+<mat-card-title>
+  {{ 'User' | translate }}
+</mat-card-title>
+<mat-card-content id="manage-users-dialog">
+  <form flex-col>
+    <mat-form-field class="width-100">
+      <input matInput name="name" [placeholder]="'Name' | translate" [(ngModel)]="user.name">
+    </mat-form-field>
+
+    <mat-form-field class="width-100">
+      <input matInput name="username" autocomplete="username" [placeholder]="'Username' | translate" [(ngModel)]="user.username">
+    </mat-form-field>
+
+    <mat-form-field class="width-100">
+      <input matInput name="password" autocomplete="new-password" type="password" [placeholder]="'Password' | translate"
+        [(ngModel)]="user.password">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select name="groups" [placeholder]="'Groups' | translate" [(ngModel)]="user.groups" multiple>
+        <mat-option *ngFor="let group of groups" [value]="group._id">
+          {{ group.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-card-content>
+<mat-card-actions>
+  <button mat-flat-button color="primary" (click)="save()">{{ 'Save' | translate }}</button>
+  <button mat-stroked-button (click)="cancel()">{{ 'Cancel' | translate }}</button>
+</mat-card-actions>

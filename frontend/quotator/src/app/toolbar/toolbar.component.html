@@ -1,0 +1,24 @@
+<mat-toolbar color="primary">
+  <button mat-button>Quotator</button>
+  <span stretch></span>
+  <button mat-button (click)="logout()" *ngIf="loggedIn">{{ 'Logout' | translate }}</button>
+  <button mat-button [matMenuTriggerFor]="languagesMenu">{{ 'Language' | translate }}</button>
+  <mat-menu #languagesMenu="matMenu">
+    <button mat-menu-item (click)="setLanguage('en')">
+      <mat-icon svgIcon="en-flag"></mat-icon>
+      {{ 'English' | translate }}
+    </button>
+    <button mat-menu-item (click)="setLanguage('fr')">
+      <mat-icon svgIcon="fr-flag"></mat-icon>
+      {{ 'French' | translate }}
+    </button>
+    <button mat-menu-item (click)="setLanguage('de')">
+      <mat-icon svgIcon="de-flag"></mat-icon>
+      {{ 'German' | translate }}
+    </button>
+    <button mat-menu-item (click)="setLanguage('pt')">
+      <mat-icon svgIcon="pt-flag"></mat-icon>
+      {{ 'Portuguese' | translate }}
+    </button>
+  </mat-menu>
+</mat-toolbar>

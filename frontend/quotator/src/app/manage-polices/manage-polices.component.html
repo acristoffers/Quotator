@@ -1,0 +1,34 @@
+<div flex-col>
+  <div id="manage-polices">
+    <mat-card>
+      <mat-card-title>
+        {{ 'Manage Polices' | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <mat-form-field class="width-100">
+          <input matInput [placeholder]="'Filter' | translate" [(ngModel)]="filter">
+        </mat-form-field>
+
+        <mat-list>
+          <mat-list-item *ngFor="let policy of filteredPolices()">
+            <div flex class="width-100">
+              <span stretch>{{ policy.name }}</span>
+              <button mat-icon-button (click)="edit(policy)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="remove(policy)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+      <mat-card-actions flex>
+        <span stretch></span>
+        <button mat-flat-button color="primary" (click)="addPolicy()">
+          {{ 'Add' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

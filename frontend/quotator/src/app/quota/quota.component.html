@@ -1,0 +1,17 @@
+<div flex-col>
+  <div id="quotas">
+    <mat-card>
+      <mat-card-title>
+        {{ 'My Quota' | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let quota of quotas">
+            <h4 mat-line>{{ 'Policy' | translate }}: {{ quota.policy.name }}</h4>
+            <p mat-line> {{ 'Quantity' | translate }}: {{ quota.quantity }} </p>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

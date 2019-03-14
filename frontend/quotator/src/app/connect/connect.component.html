@@ -1,0 +1,49 @@
+<div flex-col class="connect-wrapper">
+  <mat-card *ngIf="!isLoggedIn()">
+    <mat-card-title>
+      {{ 'Connect' | translate }}
+    </mat-card-title>
+    <mat-card-content>
+      <form action="#">
+        <mat-form-field class="width-100">
+          <input matInput name="username" autocomplete="username" [placeholder]="'Username' | translate" [(ngModel)]="username"
+            (keydown.enter)="connect()" autofocus>
+        </mat-form-field>
+
+        <mat-form-field class="width-100">
+          <input type="password" name="password" matInput autocomplete="current-password" [placeholder]="'Password' | translate"
+            [(ngModel)]="password" (keydown.enter)="connect()">
+        </mat-form-field>
+
+        <button class="width-100" [disabled]='working' mat-flat-button color="primary" (click)="connect()">
+          {{ 'Connect' | translate }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="isLoggedIn()">
+    <mat-card-title>
+      {{ 'Set Password' | translate }}
+    </mat-card-title>
+    <mat-card-content>
+      <form>
+        <input type="text" name="username" [value]="username" autocomplete="username" style="display: none">
+
+        <mat-form-field class="width-100">
+          <input type="password" name="password" autocomplete="current-password" matInput [placeholder]="'Password' | translate"
+            [(ngModel)]="password" (keydown.enter)="setPassword()">
+        </mat-form-field>
+
+        <mat-form-field class="width-100">
+          <input type="password" name="new-password" autocomplete="new-password" matInput [placeholder]="'Password' | translate"
+            [(ngModel)]="confPassword" (keydown.enter)="setPassword()">
+        </mat-form-field>
+
+        <button class="width-100" [disabled]='working' mat-flat-button color="primary" (click)="setPassword()">
+          {{ 'Save' | translate }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
