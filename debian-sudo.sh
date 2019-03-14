@@ -139,10 +139,15 @@ EOF
 ###                                                                          ###
 ################################################################################
 
-sudo apt install -y python3-pip python3-dev build-essential libssl-dev\
-                    libffi-dev python3-setuptools libcups2-dev
+umask 000
 
-sudo pip3 install wheel uwsgi Flask Flask-Cors pycups
+sudo apt install -y build-essential libssl-dev libffi-dev libcups2-dev curl \
+                    libbz2-dev nginx openssl
+
+curl https://pyenv.run | bash
+~/.pyenv/bin/pyenv install 3.7.2
+~/.pyenv/versions/3.7.2/bin/pip3 install --upgrade pip
+~/.pyenv/versions/3.7.2/bin/pip3 install wheel uwsgi Flask Flask-Cors pycups pymongo
 
 git clone https://github.com/acristoffers/quotator
 cd quotator
@@ -154,7 +159,11 @@ module = wsgi:app
 master = true
 processes = 5
 
-socket = quotator.sock
+socket = /tmp/quotator.sock
+uid = www-data
+gid = www-data
+chown-socket = www-data
+chgrp-socket = www-data
 chmod-socket = 660
 vacuum = true
 
@@ -167,20 +176,115 @@ Description=Quotator uWSGI
 After=network.target
 
 [Service]
-User=www
+User=www-data
 Group=www-data
 WorkingDirectory=/var/www/quotator
 Environment="PATH=/var/www/quotator"
-ExecStart=/usr/local/bin/uwsgi --ini myproject.ini
+ExecStart=$HOME/.pyenv/versions/3.7.2/bin/uwsgi --ini quotator.ini
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-sudo cp release /var/www/quotator
+mkdir release/.ssl
+openssl req -new -x509 -days 1825 -nodes -out release/.ssl/quotator.pem -keyout release/.ssl/quotator.key
+
+sudo rm -r /var/www/quotator
+sudo cp -r release /var/www/quotator
+sudo chown www-data -R /var/www/quotator
+sudo chgrp www-data -R /var/www/quotator
+sudo chmod 554 -R /var/www/quotator
 
 sudo systemctl start quotator
 sudo systemctl enable quotator
+
+sudo tee /etc/nginx/nginx.conf << EOF
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+include /etc/nginx/main.d/*.conf;
+
+events {
+  worker_connections 768;
+}
+
+http {
+  include /etc/nginx/conf.d/*.conf;
+
+  include /etc/nginx/mime.types;
+  default_type application/octet-stream;
+
+  sendfile on;
+  tcp_nopush on;
+  tcp_nodelay on;
+  keepalive_timeout 65;
+  types_hash_max_size 2048;
+
+  access_log /var/log/nginx/access.log;
+  error_log /var/log/nginx/error.log;
+
+  gzip on;
+  gzip_comp_level 9;
+  gzip_disable "msie6";
+  gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+  server_tokens off;
+  add_header X-Frame-Options DENY;
+  add_header X-Content-Type-Options nosniff;
+  add_header X-XSS-Protection "1; mode=block";
+  add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'";
+
+  server {
+    listen       443 ssl default deferred;
+    server_name  da-impressora;
+
+    ssl_certificate      /var/www/quotator/.ssl/quotator.pem;
+    ssl_certificate_key  /var/www/quotator/.ssl/quotator.key;
+
+    ssl_session_cache    shared:SSL:1m;
+    ssl_session_timeout  5m;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    ssl_prefer_server_ciphers on;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "EECDH+AESGCM EECDH+AES RSA+AES !RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";
+
+    add_header Strict-Transport-Security "max-age=31536000;";
+
+    charset utf-8;
+
+    root /var/www/quotator/quotator;
+
+    location / {
+      try_files \$uri index.html;
+      expires 1w;
+      add_header Cache-Control public;
+      gzip_static on;
+      add_header ETag "";
+      break;
+    }
+
+    location /api {
+      include uwsgi_params;
+      uwsgi_pass unix:/tmp/quotator.sock;
+    }
+  }
+
+  server {
+    listen         80;
+    server_name    da-impressora;
+    
+    location / {
+      return  307 https://$server_name$request_uri;
+    }
+  }
+}
+EOF
+
+sudo systemctl restart nginx
 
 # Adicionar usuário:
 # newuser g201315500060
