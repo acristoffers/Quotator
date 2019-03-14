@@ -15,17 +15,6 @@ sudo addgroup nologin
 
 echo 'DenyGroups nologin\nPermitRootLogin no' | sudo tee -a /etc/ssh/sshd_config
 
-mkdir bin
-tee bin/newuser << EOF
-#!/bin/bash
-
-sudo adduser --no-create-home --shell /bin/false $1
-sudo usermod -aG samba $1
-sudo usermod -aG nologin $1
-sudo smbpasswd -a $1
-EOF
-chmod +x bin/newuser
-
 tee -a .bashrc << EOF
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -142,7 +131,9 @@ EOF
 umask 000
 
 sudo apt install -y build-essential libssl-dev libffi-dev libcups2-dev curl \
-                    libbz2-dev nginx openssl mongodb
+                    libbz2-dev nginx openssl mongodb python3 python3-pip
+
+sudo pip3 install pymongo
 
 curl https://pyenv.run | bash
 ~/.pyenv/bin/pyenv install 3.7.2
@@ -284,7 +275,43 @@ EOF
 
 sudo systemctl restart nginx
 
-# Adicionar usuário:
-# newuser g201315500060
+sudo cp cups-backend/quotator.py /usr/lib/cups/backend/quotator
+sudo chmod 700 /usr/lib/cups/backend/*
+
+pushd /usr/lib/cups/backend
+sudo ./quotator --gen
+popd
+
+sudo tee /opt/user_add << EOF
+#!/bin/bash
+
+# \$1 username
+# \$2 full name
+# \$3 password
+
+sudo adduser --disabled-password --no-create-home --shell /bin/false --gecos "\$2,,,," \$1
+sudo usermod -aG samba \$1
+sudo usermod -aG nologin \$1
+(echo \$3; echo \$3) | sudo smbpasswd -a \$1 -s
+EOF
+
+sudo tee /opt/user_del << EOF
+#!/bin/bash
+
+# \$1 username
+
+sudo smbpasswd -x \$1
+sudo deluser \$1
+sudo delgroup \$1
+EOF
+
+sudo chmod 555 /opt/*
+sudo chown www-data /opt/*
+sudo chgrp www-data /opt/*
+
+sudo tee -a /etc/sudoers << EOF
+www-data ALL=(ALL) NOPASSWD: /opt/user_add
+www-data ALL=(ALL) NOPASSWD: /opt/user_del
+EOF
 
 # Adicionar drivers Windows: https://wiki.samba.org/index.php/Setting_up_Automatic_Printer_Driver_Downloads_for_Windows_Clients#Supported_Windows_Printer_Drivers
