@@ -149,9 +149,6 @@ curl https://pyenv.run | bash
 ~/.pyenv/versions/3.7.2/bin/pip3 install --upgrade pip
 ~/.pyenv/versions/3.7.2/bin/pip3 install wheel uwsgi Flask Flask-Cors pycups pymongo
 
-git clone https://github.com/acristoffers/quotator
-cd quotator
-
 tee release/quotator.ini << EOF
 [uwsgi]
 module = wsgi:app
