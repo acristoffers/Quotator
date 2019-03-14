@@ -142,7 +142,7 @@ EOF
 umask 000
 
 sudo apt install -y build-essential libssl-dev libffi-dev libcups2-dev curl \
-                    libbz2-dev nginx openssl
+                    libbz2-dev nginx openssl mongodb
 
 curl https://pyenv.run | bash
 ~/.pyenv/bin/pyenv install 3.7.2
@@ -268,6 +268,7 @@ http {
     }
 
     location /api {
+      rewrite  ^/api/(.*) /\$1 break;
       include uwsgi_params;
       uwsgi_pass unix:/tmp/quotator.sock;
     }
