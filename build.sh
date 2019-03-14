@@ -8,4 +8,4 @@ popd
 rm -r release 
 mkdir release
 cp backend/*.py release/
-cp -r frontend/quotator/dist release/quotator
+cp -r frontend/quotator/dist/quotator release/quotator
