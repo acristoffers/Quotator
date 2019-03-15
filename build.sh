@@ -2,7 +2,7 @@
 
 pushd frontend/quotator
 yarn
-ng build
+ng build --prod
 popd
 
 rm -r release 

@@ -12,6 +12,7 @@ sudo apt-get autoremove -y
 sudo apt install -y vim git build-essential net-tools
 
 sudo addgroup nologin
+sudo usermod -aG lpadmin $(whoami)
 
 echo 'DenyGroups nologin\nPermitRootLogin no' | sudo tee -a /etc/ssh/sshd_config
 
@@ -52,7 +53,7 @@ echo "DefaultEncryption Never" | sudo tee -a /etc/cups/cupsd.conf > /dev/null
 ###                                                                          ###
 ################################################################################
 
-sudo apt install -y samba
+sudo apt install -y samba smbclient
 
 sudo tee /etc/samba/smb.conf << EOF
 [global]
@@ -76,6 +77,12 @@ sudo tee /etc/samba/smb.conf << EOF
   pam password change = yes
   map to guest = bad user
   usershare allow guests = no
+  admin users = $USER
+
+[homes]
+  comment = Home Directories
+  browseable = no
+  writable = yes
 
 [printers]
   comment = All Printers
@@ -133,7 +140,8 @@ EOF
 umask 000
 
 sudo apt install -y build-essential libssl-dev libffi-dev libcups2-dev curl \
-                    libbz2-dev nginx openssl mongodb python3 python3-pip
+                    libbz2-dev nginx openssl mongodb python3 python3-pip \
+                    pkpgcounter
 
 sudo pip3 install pymongo
 
@@ -175,6 +183,25 @@ ExecStart=$HOME/.pyenv/versions/3.7.2/bin/uwsgi --ini quotator.ini
 [Install]
 WantedBy=multi-user.target
 EOF
+
+sudo tee /etc/systemd/system/quotator-swiper.service << EOF
+[Unit]
+Description=Quotator Swiper
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/var/quotator-swiper
+Environment="PATH=/var/quotator-swiper"
+ExecStart=$HOME/.pyenv/versions/3.7.2/bin/python3 /var/quotator-swiper/swiper.py
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo mkdir -p /var/quotator-swiper
+sudo cp swiper/swiper.py /var/quotator-swiper/swiper.py
 
 mkdir release/.ssl
 openssl req -new -x509 -days 1825 -nodes -out release/.ssl/quotator.pem -keyout release/.ssl/quotator.key
@@ -291,7 +318,7 @@ sudo tee /opt/user_add << EOF
 # \$2 full name
 # \$3 password
 
-sudo adduser --disabled-password --no-create-home --shell /bin/false --gecos "\$2,,,," \$1
+sudo adduser --disabled-password --shell /bin/false --gecos "\$2,,,," \$1
 sudo usermod -aG samba \$1
 sudo usermod -aG nologin \$1
 (echo \$3; echo \$3) | sudo smbpasswd -s -a \$1
@@ -326,4 +353,10 @@ www-data ALL=(ALL) NOPASSWD: /opt/user_set
 www-data ALL=(ALL) NOPASSWD: /opt/user_del
 EOF
 
-# Adicionar drivers Windows: https://wiki.samba.org/index.php/Setting_up_Automatic_Printer_Driver_Downloads_for_Windows_Clients#Supported_Windows_Printer_Drivers
+sudo systemctl start quotator-swipe
+sudo systemctl enable quotator-swipe
+
+# Adicionar drivers Windows:
+#   https://wiki.samba.org/index.php/Setting_up_Automatic_Printer_Driver_Downloads_for_Windows_Clients#Supported_Windows_Printer_Drivers
+#   https://ubuntuforums.org/showthread.php?t=2191772
+#   https://wiki.samba.org/index.php/Setting_up_Automatic_Printer_Driver_Downloads_for_Windows_Clients
