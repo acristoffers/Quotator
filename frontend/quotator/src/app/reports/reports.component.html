@@ -25,7 +25,7 @@
 
               <ng-container matColumnDef="params">
                 <th mat-header-cell *matHeaderCellDef> {{ 'Parameter' | translate }} </th>
-                <td mat-cell width="40%" *matCellDef="let report"> {{ dumps(report.params) }} </td>
+                <td mat-cell class="report" *matCellDef="let report"> {{ dumps(report.params) }} </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
