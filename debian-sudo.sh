@@ -353,8 +353,8 @@ www-data ALL=(ALL) NOPASSWD: /opt/user_set
 www-data ALL=(ALL) NOPASSWD: /opt/user_del
 EOF
 
-sudo systemctl start quotator-swipe
-sudo systemctl enable quotator-swipe
+sudo systemctl start quotator-swiper
+sudo systemctl enable quotator-swiper
 
 # Adicionar drivers Windows:
 #   https://wiki.samba.org/index.php/Setting_up_Automatic_Printer_Driver_Downloads_for_Windows_Clients#Supported_Windows_Printer_Drivers

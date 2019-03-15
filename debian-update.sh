@@ -69,7 +69,7 @@ sudo chmod 554 -R /var/www/quotator
 
 sudo systemctl restart quotator
 sudo systemctl restart nginx
-sudo systemctl restart quotator-swipe
+sudo systemctl restart quotator-swiper
 
 sudo cp cups-backend/quotator.py /usr/lib/cups/backend/quotator
 sudo chmod 700 /usr/lib/cups/backend/*
