@@ -22,6 +22,7 @@
 
 import { Component } from '@angular/core';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
+import * as _ from 'lodash';
 import { Group, ManageGroupsService } from '../manage-groups.service';
 import { ManageUsersService, User } from '../manage-users.service';
 import { TranslateService } from '../translation/translation.service';
@@ -42,7 +43,7 @@ export class ManageUsersDialogComponent {
     private toast: MatSnackBar,
   ) {
     this.groupsService.listGroups().subscribe(
-      groups => this.groups = groups,
+      groups => this.groups = _.sortBy(groups, 'name'),
       this.httpError()
     );
   }

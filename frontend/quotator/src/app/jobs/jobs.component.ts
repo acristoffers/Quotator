@@ -20,8 +20,9 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatPaginator, MatSnackBar, MatTableDataSource } from '@angular/material';
+import * as _ from 'lodash';
 import { Job, JobsService } from '../jobs.service';
 import { TranslateService } from '../translation/translation.service';
 
@@ -30,9 +31,12 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './jobs.component.html',
   styleUrls: ['./jobs.component.scss']
 })
-export class JobsComponent {
-  displayedColumns: string[] = ['status', 'user', 'job', 'title', 'copies', 'pages'];
+export class JobsComponent implements AfterViewInit {
+  displayedColumns: string[] = ['status', 'user', 'job', 'title', 'copies', 'pages', 'time'];
   jobs: Job[] = [];
+  dataSource = new MatTableDataSource<Job>(this.jobs);
+
+  @ViewChild('paginator') paginator: MatPaginator;
 
   constructor(
     private service: JobsService,
@@ -40,9 +44,13 @@ export class JobsComponent {
     private toast: MatSnackBar
   ) {
     this.service.getJobs().subscribe(
-      jobs => this.jobs = jobs,
+      jobs => this.jobs = _.orderBy(jobs, 'time', 'desc'),
       this.httpError()
     );
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   httpError(): () => void {

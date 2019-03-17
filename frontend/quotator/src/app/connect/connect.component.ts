@@ -25,6 +25,7 @@ import { Component } from '@angular/core';
 import { ConnectService, User } from '../connect.service';
 import { TranslateService } from '../translation/translation.service';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'q-connect',
@@ -40,6 +41,7 @@ export class ConnectComponent {
   constructor(
     private service: ConnectService,
     private i18n: TranslateService,
+    private router: Router,
     private toast: MatSnackBar) {
   }
 
@@ -58,6 +60,10 @@ export class ConnectComponent {
 
         this.password = '';
         this.confPassword = '';
+
+        if (ConnectService.lastUrl != null) {
+          this.router.navigateByUrl(ConnectService.lastUrl);
+        }
       },
       this.httpError());
   }

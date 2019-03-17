@@ -36,6 +36,8 @@ export interface User {
   providedIn: 'root'
 })
 export class ConnectService extends APIBase {
+  static lastUrl: string = null;
+
   protected constructor(protected http: HttpClient) {
     super(http);
   }

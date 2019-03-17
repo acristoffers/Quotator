@@ -35,7 +35,15 @@ import { TranslateService } from '../translation/translation.service';
 export class ManageGroupsComponent {
   filter = '';
   newGroup: Group = { 'name': '' };
-  groups: Group[] = [];
+  _groups: Group[] = [];
+
+  get groups(): Group[] {
+    return this._groups;
+  }
+
+  set groups(groups: Group[]) {
+    this._groups = _.sortBy(groups, 'name');
+  }
 
   constructor(
     private service: ManageGroupsService,
@@ -90,7 +98,7 @@ export class ManageGroupsComponent {
   }
 
   filteredGroups(): Group[] {
-    return _.filter(this.groups, g => g.name.includes(this.filter));
+    return _.filter(this.groups, g => _.lowerCase(_.deburr(g.name)).includes(this.filter));
   }
 
   httpError(): () => void {

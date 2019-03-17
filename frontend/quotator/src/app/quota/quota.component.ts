@@ -22,6 +22,7 @@
 
 import { Component } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
+import * as _ from 'lodash';
 import { ManageQuotasService, Quota } from '../manage-quotas.service';
 import { TranslateService } from '../translation/translation.service';
 
@@ -32,7 +33,15 @@ import { TranslateService } from '../translation/translation.service';
   styleUrls: ['./quota.component.scss']
 })
 export class QuotaComponent {
-  quotas: Quota[] = [];
+  _quotas: Quota[] = [];
+
+  get quotas(): Quota[] {
+    return this._quotas;
+  }
+
+  set quotas(quotas: Quota[]) {
+    this._quotas = _.sortBy(quotas, 'policy.name');
+  }
 
   constructor(
     private service: ManageQuotasService,

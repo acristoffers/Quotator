@@ -2,6 +2,10 @@
   {{ 'Quota' | translate }}
 </mat-card-title>
 <mat-card-content id="manage-polices-dialog" flex-col>
+  <mat-form-field class="width-100">
+    <input matInput [placeholder]="'Filter' | translate" [(ngModel)]="filter">
+  </mat-form-field>
+
   <mat-form-field>
     <mat-select [placeholder]="'User' | translate" [(ngModel)]="quota.user">
       <mat-option *ngFor="let user of users" [value]="user._id">

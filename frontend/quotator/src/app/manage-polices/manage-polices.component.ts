@@ -36,7 +36,15 @@ import { TranslateService } from '../translation/translation.service';
 })
 export class ManagePolicesComponent {
   filter = '';
-  polices: Policy[] = [];
+  _polices: Policy[] = [];
+
+  get polices(): Policy[] {
+    return this._polices;
+  }
+
+  set polices(polices: Policy[]) {
+    this._polices = _.sortBy(polices, 'name');
+  }
 
   constructor(
     private service: ManagePolicesService,
@@ -104,7 +112,7 @@ export class ManagePolicesComponent {
   }
 
   filteredPolices(): Policy[] {
-    return _.filter(this.polices, p => p.name.includes(this.filter));
+    return _.filter(this.polices, p => _.lowerCase(_.deburr(p.name)).includes(this.filter));
   }
 
   httpError(): () => void {

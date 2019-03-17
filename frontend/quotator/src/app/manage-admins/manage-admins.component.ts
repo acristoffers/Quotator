@@ -36,7 +36,15 @@ import { ManageAdminsDialogComponent } from '../manage-admins-dialog/manage-admi
 })
 export class ManageAdminsComponent {
   filter = '';
-  users: Admin[] = [];
+  _users: Admin[] = [];
+
+  get users(): Admin[] {
+    return this._users;
+  }
+
+  set users(users: Admin[]) {
+    this._users = _.sortBy(users, 'username');
+  }
 
   constructor(
     private service: ManageAdminsService,
@@ -103,7 +111,10 @@ export class ManageAdminsComponent {
   }
 
   filteredUsers(): Admin[] {
-    return _.filter(this.users, u => u.name.includes(this.filter) || u.username.includes(this.filter));
+    return _.filter(this.users, u => {
+      return _.lowerCase(_.deburr(u.name)).includes(this.filter) ||
+        _.lowerCase(_.deburr(u.username)).includes(this.filter);
+    });
   }
 
   httpError(): () => void {

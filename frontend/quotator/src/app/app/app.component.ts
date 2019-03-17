@@ -21,9 +21,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '../translation/translation.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { APIBase } from '../api-base';
-import { Router } from '@angular/router';
+import { ConnectService } from '../connect.service';
+import { TranslateService } from '../translation/translation.service';
 
 @Component({
   selector: 'q-root',
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
     document.getElementsByTagName('body')[0].removeAttribute('unresolved');
 
     if (APIBase.accessToken == null) {
+      ConnectService.lastUrl = window.location.pathname;
       this.router.navigate(['connect']);
     }
   }

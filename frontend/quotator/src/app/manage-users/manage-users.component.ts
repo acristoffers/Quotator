@@ -37,7 +37,15 @@ import { TranslateService } from '../translation/translation.service';
 })
 export class ManageUsersComponent {
   filter = '';
-  users: User[] = [];
+  _users: User[] = [];
+
+  get users(): User[] {
+    return this._users;
+  }
+
+  set users(users: User[]) {
+    this._users = _.sortBy(users, 'username');
+  }
 
   constructor(
     private service: ManageUsersService,
@@ -104,7 +112,10 @@ export class ManageUsersComponent {
   }
 
   filteredUsers(): User[] {
-    return _.filter(this.users, u => u.name.includes(this.filter) || u.username.includes(this.filter));
+    return _.filter(this.users, u => {
+      return _.lowerCase(_.deburr(u.name)).includes(this.filter) ||
+        _.lowerCase(_.deburr(u.username)).includes(this.filter);
+    });
   }
 
   httpError(): () => void {

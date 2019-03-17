@@ -20,24 +20,27 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import * as _ from 'lodash';
+import { Job, JobsService } from '../jobs.service';
 import { Report, ReportsService } from '../reports.service';
 import { TranslateService } from '../translation/translation.service';
-import { Job, JobsService } from '../jobs.service';
 
 @Component({
   selector: 'q-reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
-export class ReportsComponent {
+export class ReportsComponent implements OnInit {
   displayedColumns: string[] = ['user', 'action', 'params', 'time'];
-  reports: Report[] = [];
+  reportsDataSource = new MatTableDataSource<Report>([]);
 
-  displayedJobsColumns: string[] = ['status', 'user', 'job', 'title', 'copies', 'pages'];
-  jobs: Job[] = [];
+  displayedJobsColumns: string[] = ['status', 'user', 'job', 'title', 'copies', 'pages', 'time'];
+  jobsDataSource = new MatTableDataSource<Job>([]);
+
+  @ViewChild('resourcesPaginator') reportsPaginator: MatPaginator;
+  @ViewChild('jobsPaginator') jobsPaginator: MatPaginator;
 
   constructor(
     private service: ReportsService,
@@ -48,15 +51,20 @@ export class ReportsComponent {
     this.service.listReports().subscribe(
       reports => {
         reports = _.map(reports, r => _.assign(r, { time: new Date(r.time * 1000) }));
-        this.reports = reports;
+        this.reportsDataSource.data = _.orderBy(reports, 'time', 'desc');
       },
       this.httpError()
     );
 
     this.jobService.listJobs().subscribe(
-      jobs => this.jobs = jobs,
+      jobs => this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc'),
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.jobsDataSource.paginator = this.jobsPaginator;
+    this.reportsDataSource.paginator = this.reportsPaginator;
   }
 
   dumps(obj: any): string {

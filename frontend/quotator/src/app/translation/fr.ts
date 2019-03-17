@@ -66,5 +66,11 @@ export const LANG_FR_TRANS = {
     'Permissions': 'Autorisations',
     'Permission': 'Autorisation',
     'Filter': 'Filtrer',
-    'Quantity': 'Quantité'
+    'Quantity': 'Quantité',
+    'Title': 'Titre',
+    'Copies': 'Copies',
+    'Pages': 'Pages',
+    'Date': 'Date',
+    'Action': 'Action',
+    'Parameter': 'Paramètre'
 };

@@ -38,9 +38,33 @@ import { TranslateService } from '../translation/translation.service';
 })
 export class ManageQuotasComponent {
   filter = '';
-  quotas: Quota[] = [];
-  users: User[] = [];
-  polices: Policy[] = [];
+  _quotas: Quota[] = [];
+  _users: User[] = [];
+  _polices: Policy[] = [];
+
+  get quotas(): Quota[] {
+    return this._quotas;
+  }
+
+  set quotas(quotas: Quota[]) {
+    this._quotas = _.sortBy(quotas, 'user.name');
+  }
+
+  get users(): User[] {
+    return this._users;
+  }
+
+  set users(users: User[]) {
+    this._users = _.sortBy(users, 'username');
+  }
+
+  get polices(): Policy[] {
+    return this._polices;
+  }
+
+  set polices(polices: Policy[]) {
+    this._polices = _.sortBy(polices, 'name');
+  }
 
   constructor(
     private service: ManageQuotasService,
@@ -128,9 +152,9 @@ export class ManageQuotasComponent {
     return _.filter(this.quotas, quota => {
       const user = this.findUser(quota.user);
       const policy = this.findPolicy(quota.policy);
-      return user.name.includes(this.filter) ||
-        user.username.includes(this.filter) ||
-        policy.name.includes(this.filter);
+      return _.lowerCase(_.deburr(user.name)).includes(this.filter) ||
+        _.lowerCase(_.deburr(user.username)).includes(this.filter) ||
+        _.lowerCase(_.deburr(policy.name)).includes(this.filter);
     });
   }
 

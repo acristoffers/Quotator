@@ -58,7 +58,7 @@ export class APIBase {
   }
 
   protected urlFor(path: string): string {
-    // return `http://localhost:5000${path}`; // development
-    return `/api${path}`; // production
+    return `http://localhost:5000${path}`; // development
+    // return `/api${path}`; // production
   }
 }

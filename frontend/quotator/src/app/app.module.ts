@@ -38,7 +38,7 @@ import { TranslateService } from './translation/translation.service';
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule,
   MatIconModule, MatInputModule, MatListModule, MatSelectModule,
-  MatSidenavModule, MatSnackBarModule, MatToolbarModule, MatMenuModule, MatSlideToggleModule, MatTableModule, MatTabsModule
+  MatSidenavModule, MatSnackBarModule, MatToolbarModule, MatMenuModule, MatSlideToggleModule, MatTableModule, MatTabsModule, MatPaginatorModule
 } from '@angular/material';
 import { ManageGroupsComponent } from './manage-groups/manage-groups.component';
 import { ManagePolicesComponent } from './manage-polices/manage-polices.component';
@@ -97,7 +97,8 @@ import { ReportsComponent } from './reports/reports.component';
     MatSnackBarModule,
     MatSlideToggleModule,
     MatTableModule,
-    MatTabsModule
+    MatTabsModule,
+    MatPaginatorModule
   ],
   providers: [
     TRANSLATION_PROVIDERS,

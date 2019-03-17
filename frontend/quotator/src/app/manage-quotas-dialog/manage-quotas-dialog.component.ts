@@ -36,7 +36,16 @@ import { TranslateService } from '../translation/translation.service';
 export class ManageQuotasDialogComponent {
   quota: Quota = { user: '', policy: '', quantity: 0 };
   polices: Policy[] = [];
-  users: User[] = [];
+  _users: User[] = [];
+  filter = '';
+
+  get users(): User[] {
+    return _.filter(this._users, u => u.name.includes(this.filter) || u.username.includes(this.filter));
+  }
+
+  set users(users: User[]) {
+    this._users = users;
+  }
 
   constructor(
     public dialogRef: MatDialogRef<ManageQuotasDialogComponent>,
