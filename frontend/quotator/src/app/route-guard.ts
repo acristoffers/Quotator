@@ -20,33 +20,22 @@
  * THE SOFTWARE.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
 import * as _ from 'lodash';
-import { APIBase } from '../api-base';
-import { ConnectService } from '../connect.service';
-import { TranslateService } from '../translation/translation.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ConnectService } from './connect.service';
 
-@Component({
-  selector: 'q-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+@Injectable({
+  providedIn: 'root'
 })
-export class AppComponent implements OnInit {
-  constructor(
-    private translate: TranslateService,
-    private router: Router
-  ) {
-  }
-
-  ngOnInit() {
-    const lang = localStorage.getItem('language') || 'en';
-    this.translate.use(lang);
-    document.getElementsByTagName('body')[0].removeAttribute('unresolved');
-
-    if (APIBase.accessToken == null) {
-      ConnectService.lastUrl = window.location.pathname;
-      this.router.navigate(['connect']);
-    }
+export class RouteGuard implements CanActivate {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return ConnectService.user.pipe(map(user => {
+      return user != null &&
+        user.permissions != null &&
+        _.includes(user.permissions, route.data.permission);
+    }));
   }
 }

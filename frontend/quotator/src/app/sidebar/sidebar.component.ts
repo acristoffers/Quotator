@@ -55,6 +55,9 @@ export class SidebarComponent {
       return [];
     }
 
-    return _.filter(this.bs, b => b.permission == null || this.user.permissions != null && _.includes(this.user.permissions, b.permission));
+    return _.filter(this.bs, b => b.permission == null ||
+      this.user != null &&
+      this.user.permissions != null &&
+      _.includes(this.user.permissions, b.permission));
   }
 }

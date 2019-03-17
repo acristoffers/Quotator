@@ -21,15 +21,15 @@ THE SOFTWARE.
 */
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from './connect.service';
 
 export class APIBase {
   static accessToken = null;
 
-  static token: Subject<string> = new Subject();
-  static user: Subject<User> = new Subject();
+  static token: BehaviorSubject<string> = new BehaviorSubject(null);
+  static user: BehaviorSubject<User> = new BehaviorSubject(null);
 
   protected constructor(protected http: HttpClient) {
     APIBase.token.subscribe(token => APIBase.accessToken = token);
@@ -58,7 +58,7 @@ export class APIBase {
   }
 
   protected urlFor(path: string): string {
-    return `http://localhost:5000${path}`; // development
-    // return `/api${path}`; // production
+    // return `http://localhost:5000${path}`; // development
+    return `/api${path}`; // production
   }
 }

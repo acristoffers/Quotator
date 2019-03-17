@@ -31,6 +31,7 @@ import { ManageQuotasComponent } from './manage-quotas/manage-quotas.component';
 import { QuotaComponent } from './quota/quota.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { ReportsComponent } from './reports/reports.component';
+import { RouteGuard } from './route-guard';
 
 const routes: Routes = [
   {
@@ -44,23 +45,51 @@ const routes: Routes = [
   },
   {
     path: 'manage-groups',
-    component: ManageGroupsComponent
+    component: ManageGroupsComponent,
+    canActivate: [RouteGuard],
+    data: {
+      permission: 'manage_users'
+    }
   },
   {
     path: 'manage-polices',
-    component: ManagePolicesComponent
+    component: ManagePolicesComponent,
+    canActivate: [RouteGuard],
+    data: {
+      permission: 'manage_users'
+    }
   },
   {
     path: 'manage-users',
-    component: ManageUsersComponent
+    component: ManageUsersComponent,
+    canActivate: [RouteGuard],
+    data: {
+      permission: 'manage_users'
+    }
   },
   {
     path: 'manage-admins',
-    component: ManageAdminsComponent
+    component: ManageAdminsComponent,
+    canActivate: [RouteGuard],
+    data: {
+      permission: 'manage_admins'
+    }
   },
   {
     path: 'manage-quotas',
-    component: ManageQuotasComponent
+    component: ManageQuotasComponent,
+    canActivate: [RouteGuard],
+    data: {
+      permission: 'manage_quotas'
+    }
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent,
+    canActivate: [RouteGuard],
+    data: {
+      permission: 'reports'
+    }
   },
   {
     path: 'quota',
@@ -69,10 +98,6 @@ const routes: Routes = [
   {
     path: 'jobs',
     component: JobsComponent
-  },
-  {
-    path: 'reports',
-    component: ReportsComponent
   }
 ];
 

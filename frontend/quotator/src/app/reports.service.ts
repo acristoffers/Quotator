@@ -24,7 +24,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APIBase } from './api-base';
-import { Time } from '@angular/common';
 
 export interface Report {
   user: string;

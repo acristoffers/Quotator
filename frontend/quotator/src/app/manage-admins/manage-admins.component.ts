@@ -28,6 +28,8 @@ import { flatMap } from 'rxjs/operators';
 import { Admin, ManageAdminsService } from '../manage-admins.service';
 import { TranslateService } from '../translation/translation.service';
 import { ManageAdminsDialogComponent } from '../manage-admins-dialog/manage-admins-dialog.component';
+import { ConnectService } from '../connect.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'q-manage-admins',

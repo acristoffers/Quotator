@@ -77,5 +77,6 @@ export class ToolbarComponent {
   logout() {
     ConnectService.token.next(null);
     ConnectService.user.next(null);
+    ConnectService.lastUrl = null;
   }
 }
