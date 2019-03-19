@@ -44,7 +44,10 @@ export class JobsComponent implements AfterViewInit {
     private toast: MatSnackBar
   ) {
     this.service.getJobs().subscribe(
-      jobs => this.jobs = _.orderBy(jobs, 'time', 'desc'),
+      jobs => {
+        jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
+        return this.jobs = _.orderBy(jobs, 'time', 'desc');
+      },
       this.httpError()
     );
   }

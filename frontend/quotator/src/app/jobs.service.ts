@@ -34,7 +34,7 @@ export interface Job {
   copies: number;
   pages: number;
   env: [string, string][];
-  time: Time;
+  time: number;
 }
 
 @Injectable({

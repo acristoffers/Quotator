@@ -57,7 +57,10 @@ export class ReportsComponent implements OnInit {
     );
 
     this.jobService.listJobs().subscribe(
-      jobs => this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc'),
+      jobs => {
+        jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
+        return this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc');
+      },
       this.httpError()
     );
   }

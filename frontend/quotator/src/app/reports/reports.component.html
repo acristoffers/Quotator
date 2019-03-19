@@ -68,7 +68,7 @@
 
               <ng-container matColumnDef="time">
                 <th mat-header-cell *matHeaderCellDef> {{ 'Date' | translate }} </th>
-                <td mat-cell *matCellDef="let job"> {{ job.time | date }} </td>
+                <td mat-cell *matCellDef="let job"> {{ job.time | date:'long' }} </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedJobsColumns"></tr>
