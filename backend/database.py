@@ -93,6 +93,7 @@ class Database(object):
         self.db.admins.update_one({'_id': user['_id']}, {'$set': user})
 
     def admin_del(self, user):
+        self.db.tokens.remove({'user': user['username']})
         self.db.admins.remove({'_id': user['_id']})
 
     def admin_list(self):
@@ -164,6 +165,14 @@ class Database(object):
         self.db.groups.update_one({'_id': group['_id']}, {'$set': group})
 
     def group_del(self, group):
+        gid = str(group['_id'])
+        for u in self.db.users.find({'groups': gid}):
+            del u['password']
+            u['groups'] = [g for g in u['groups'] if g != gid]
+            self.user_set(u)
+        for p in self.db.polices.find({'groups': gid}):
+            p['groups'] = [g for g in p['groups'] if g != gid]
+            self.policy_set(p)
         self.db.groups.remove({'_id': group['_id']})
 
     def group_list(self):
@@ -179,6 +188,7 @@ class Database(object):
         self.db.polices.update_one({'_id': policy['_id']}, {'$set': policy})
 
     def policy_del(self, policy):
+        self.db.quotas.remove({'policy': str(policy['_id'])})
         self.db.polices.remove({'_id': policy['_id']})
 
     def policy_list(self):
@@ -213,6 +223,8 @@ class Database(object):
 
     def user_del(self, user):
         subprocess.Popen(['/usr/bin/sudo', '/opt/user_del', user['username']])
+        self.db.quotas.remove({'user': str(user['_id'])})
+        self.db.tokens.remove({'user': user['username']})
         self.db.users.remove({'_id': user['_id']})
 
     def user_list(self):
