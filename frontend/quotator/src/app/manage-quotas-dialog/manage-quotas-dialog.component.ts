@@ -40,7 +40,8 @@ export class ManageQuotasDialogComponent {
   filter = '';
 
   get users(): User[] {
-    const us = _.filter(this._users, u => u.name.includes(this.filter) || u.username.includes(this.filter));
+    const d = (s: string) => _.lowerCase(_.deburr(s));
+    const us = _.filter(this._users, u => d(u.name).includes(this.filter) || u.username.includes(this.filter));
     return _.sortBy(us, 'name');
   }
 

@@ -77,7 +77,8 @@ sudo apt install -y samba smbclient
 
 sudo tee /etc/samba/smb.conf << EOF
 [global]
-  printing = CUPS
+  printing = cups
+  printcap = cups
   rpc_server:spoolss = external
   rpc_daemon:spoolssd = fork
   security = user
