@@ -33,8 +33,7 @@ import { TranslateService } from '../translation/translation.service';
 })
 export class JobsComponent implements AfterViewInit {
   displayedColumns: string[] = ['status', 'user', 'job', 'title', 'copies', 'pages', 'time'];
-  jobs: Job[] = [];
-  dataSource = new MatTableDataSource<Job>(this.jobs);
+  dataSource = new MatTableDataSource<Job>([]);
 
   @ViewChild('paginator') paginator: MatPaginator;
 
@@ -46,7 +45,7 @@ export class JobsComponent implements AfterViewInit {
     this.service.getJobs().subscribe(
       jobs => {
         jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
-        return this.jobs = _.orderBy(jobs, 'time', 'desc');
+        this.dataSource.data = _.orderBy(jobs, 'time', 'desc');
       },
       this.httpError()
     );
