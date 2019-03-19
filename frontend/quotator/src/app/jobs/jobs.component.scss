@@ -42,7 +42,8 @@
     background-color: lightgray;
   }
 
-  .mat-cell {
+  .mat-cell,
+  .mat-header-cell {
     padding: 0 1rem !important;
   }
 }
