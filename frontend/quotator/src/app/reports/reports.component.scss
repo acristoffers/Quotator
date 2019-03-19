@@ -45,4 +45,8 @@
   tr:nth-of-type(even) {
     background-color: lightgray;
   }
+
+  .mat-cell {
+    padding: 0 1rem !important;
+  }
 }
