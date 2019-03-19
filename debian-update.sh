@@ -87,6 +87,7 @@ sudo chown www-data -R /var/www/quotator
 sudo chgrp www-data -R /var/www/quotator
 sudo chmod 554 -R /var/www/quotator
 
+sudo systemctl daemon-reload
 sudo systemctl restart quotator
 sudo systemctl restart nginx
 sudo systemctl restart quotator-swiper
