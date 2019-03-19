@@ -342,6 +342,7 @@ sudo adduser --disabled-password --shell /bin/false --gecos "\$2,,,," \$1
 sudo usermod -aG samba \$1
 sudo usermod -aG nologin \$1
 (echo \$3; echo \$3) | sudo smbpasswd -s -a \$1
+echo "$1:$3" | sudo chpasswd
 EOF
 
 sudo tee /opt/user_set << EOF
@@ -351,6 +352,7 @@ sudo tee /opt/user_set << EOF
 # \$2 password
 
 (echo \$2; echo \$2) | sudo smbpasswd -s \$1
+echo "$1:$2" | sudo chpasswd
 EOF
 
 sudo tee /opt/user_del << EOF
