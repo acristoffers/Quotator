@@ -40,11 +40,12 @@ export class ManageQuotasDialogComponent {
   filter = '';
 
   get users(): User[] {
-    return _.filter(this._users, u => u.name.includes(this.filter) || u.username.includes(this.filter));
+    const us = _.filter(this._users, u => u.name.includes(this.filter) || u.username.includes(this.filter));
+    return _.sortBy(us, 'name');
   }
 
   set users(users: User[]) {
-    this._users = users;
+    this._users = _.sortBy(users, 'name');
   }
 
   constructor(
@@ -55,12 +56,12 @@ export class ManageQuotasDialogComponent {
     private toast: MatSnackBar,
   ) {
     this.usersService.listUsers().subscribe(
-      users => this.users = _.sortBy(users, 'name'),
+      users => this.users = users,
       this.httpError()
     );
 
     this.policyService.listPolices().subscribe(
-      polices => this.polices = polices,
+      polices => this.polices = _.sortBy(polices, 'name'),
       this.httpError()
     );
   }

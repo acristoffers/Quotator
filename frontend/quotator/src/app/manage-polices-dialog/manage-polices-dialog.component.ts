@@ -22,9 +22,10 @@
 
 import { Component } from '@angular/core';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
+import * as _ from 'lodash';
+import { Group, ManageGroupsService } from '../manage-groups.service';
 import { ManagePolicesService, Policy, Printer } from '../manage-polices.service';
 import { TranslateService } from '../translation/translation.service';
-import { ManageGroupsService, Group } from '../manage-groups.service';
 
 @Component({
   selector: 'q-manage-polices-dialog',
@@ -44,12 +45,12 @@ export class ManagePolicesDialogComponent {
     private toast: MatSnackBar,
   ) {
     this.service.printers().subscribe(
-      printers => this.printers = printers,
+      printers => this.printers = _.sortBy(printers, 'name'),
       this.httpError()
     );
 
     this.groupsService.listGroups().subscribe(
-      groups => this.groups = groups,
+      groups => this.groups = _.sortBy(groups, 'name'),
       this.httpError()
     );
   }

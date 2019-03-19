@@ -41,4 +41,8 @@
   .report {
     word-wrap: anywhere;
   }
+
+  tr:nth-of-type(even) {
+    background-color: lightgray;
+  }
 }

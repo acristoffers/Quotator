@@ -37,4 +37,8 @@
   table {
     width: 100%;
   }
+
+  tr:nth-of-type(even) {
+    background-color: lightgray;
+  }
 }

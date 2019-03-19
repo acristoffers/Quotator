@@ -33,4 +33,8 @@
   mat-form-field {
     margin-right: 1rem;
   }
+
+  mat-list-item:hover {
+    background-color: lightgray;
+  }
 }
