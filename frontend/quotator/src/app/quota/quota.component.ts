@@ -20,11 +20,12 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import * as _ from 'lodash';
 import { ManageQuotasService, Quota } from '../manage-quotas.service';
 import { TranslateService } from '../translation/translation.service';
+import { Observable, Subscription, timer } from 'rxjs';
 
 
 @Component({
@@ -32,8 +33,11 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './quota.component.html',
   styleUrls: ['./quota.component.scss']
 })
-export class QuotaComponent {
+export class QuotaComponent implements OnInit, OnDestroy {
   _quotas: Quota[] = [];
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   get quotas(): Quota[] {
     return this._quotas;
@@ -53,6 +57,17 @@ export class QuotaComponent {
       quotas => this.quotas = quotas,
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listQuotas().subscribe(qs => this.quotas = qs);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   httpError(): () => void {

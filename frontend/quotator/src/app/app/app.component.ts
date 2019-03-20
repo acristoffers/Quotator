@@ -26,6 +26,7 @@ import * as _ from 'lodash';
 import { APIBase } from '../api-base';
 import { ConnectService } from '../connect.service';
 import { TranslateService } from '../translation/translation.service';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 @Component({
   selector: 'q-root',
@@ -33,6 +34,8 @@ import { TranslateService } from '../translation/translation.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  sidebarOpen = ToolbarComponent.sidebarOpen;
+
   constructor(
     private translate: TranslateService,
     private router: Router

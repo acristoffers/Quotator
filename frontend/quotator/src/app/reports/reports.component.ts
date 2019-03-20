@@ -20,9 +20,10 @@
  * THE SOFTWARE.
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatSnackBar, MatTableDataSource } from '@angular/material';
 import * as _ from 'lodash';
+import { Observable, Subscription, timer } from 'rxjs';
 import { Job, JobsService } from '../jobs.service';
 import { Report, ReportsService } from '../reports.service';
 import { TranslateService } from '../translation/translation.service';
@@ -32,12 +33,15 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
-export class ReportsComponent implements OnInit {
+export class ReportsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['user', 'action', 'params', 'time'];
   reportsDataSource = new MatTableDataSource<Report>([]);
 
   displayedJobsColumns: string[] = ['status', 'user', 'job', 'title', 'copies', 'pages', 'time'];
   jobsDataSource = new MatTableDataSource<Job>([]);
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   @ViewChild('resourcesPaginator') reportsPaginator: MatPaginator;
   @ViewChild('jobsPaginator') jobsPaginator: MatPaginator;
@@ -68,6 +72,16 @@ export class ReportsComponent implements OnInit {
   ngOnInit() {
     this.jobsDataSource.paginator = this.jobsPaginator;
     this.reportsDataSource.paginator = this.reportsPaginator;
+
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listReports().subscribe(rs => this.reportsDataSource.data = rs);
+      this.jobService.listJobs().subscribe(js => this.jobsDataSource.data = js);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   dumps(obj: any): string {

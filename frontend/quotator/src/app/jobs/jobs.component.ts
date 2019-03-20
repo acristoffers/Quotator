@@ -20,9 +20,10 @@
  * THE SOFTWARE.
  */
 
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSnackBar, MatTableDataSource } from '@angular/material';
 import * as _ from 'lodash';
+import { Observable, Subscription, timer } from 'rxjs';
 import { Job, JobsService } from '../jobs.service';
 import { TranslateService } from '../translation/translation.service';
 
@@ -31,9 +32,12 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './jobs.component.html',
   styleUrls: ['./jobs.component.scss']
 })
-export class JobsComponent implements AfterViewInit {
+export class JobsComponent implements AfterViewInit, OnInit, OnDestroy {
   displayedColumns: string[] = ['status', 'user', 'job', 'title', 'copies', 'pages', 'time'];
   dataSource = new MatTableDataSource<Job>([]);
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   @ViewChild('paginator') paginator: MatPaginator;
 
@@ -49,6 +53,17 @@ export class JobsComponent implements AfterViewInit {
       },
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listJobs().subscribe(js => this.dataSource.data = js);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {

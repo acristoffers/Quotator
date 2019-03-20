@@ -1,6 +1,6 @@
 <q-toolbar></q-toolbar>
 <mat-sidenav-container>
-  <mat-sidenav #sidenav mode="side" [opened]="true">
+  <mat-sidenav #sidenav mode="side" [opened]="sidebarOpen | async">
     <q-sidebar></q-sidebar>
   </mat-sidenav>
   <router-outlet></router-outlet>

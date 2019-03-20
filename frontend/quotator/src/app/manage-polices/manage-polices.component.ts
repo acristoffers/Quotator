@@ -20,10 +20,10 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import * as _ from 'lodash';
-import { timer } from 'rxjs';
+import { timer, Observable, Subscription } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { ManagePolicesDialogComponent } from '../manage-polices-dialog/manage-polices-dialog.component';
 import { ManagePolicesService, Policy } from '../manage-polices.service';
@@ -34,9 +34,12 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './manage-polices.component.html',
   styleUrls: ['./manage-polices.component.scss']
 })
-export class ManagePolicesComponent {
+export class ManagePolicesComponent implements OnInit, OnDestroy {
   filter = '';
   _polices: Policy[] = [];
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   get polices(): Policy[] {
     return this._polices;
@@ -56,6 +59,17 @@ export class ManagePolicesComponent {
       polices => this.polices = polices,
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listPolices().subscribe(ps => this.polices = ps);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   addPolicy() {

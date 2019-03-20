@@ -27,6 +27,7 @@ import * as _ from 'lodash';
 import { TranslateService } from '../translation/translation.service';
 import { ConnectService } from '../connect.service';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'q-toolbar',
@@ -34,6 +35,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent {
+  static sidebarOpen = new BehaviorSubject(true);
+  private _sidebarOpen = true;
+
   loggedIn = false;
   enFlagUrl = 'assets/imgs/en.svg';
   deFlagUrl = 'assets/imgs/de.svg';
@@ -78,5 +82,10 @@ export class ToolbarComponent {
     ConnectService.token.next(null);
     ConnectService.user.next(null);
     ConnectService.lastUrl = null;
+  }
+
+  toggleSidebar() {
+    this._sidebarOpen = !this._sidebarOpen;
+    ToolbarComponent.sidebarOpen.next(this._sidebarOpen);
   }
 }

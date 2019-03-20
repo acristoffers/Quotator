@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <button mat-button>Quotator</button>
+  <button mat-button (click)="toggleSidebar()">Quotator</button>
   <span stretch></span>
   <button mat-button (click)="logout()" *ngIf="loggedIn">{{ 'Logout' | translate }}</button>
   <button mat-button [matMenuTriggerFor]="languagesMenu">{{ 'Language' | translate }}</button>

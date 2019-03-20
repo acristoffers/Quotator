@@ -20,10 +20,10 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import * as _ from 'lodash';
-import { timer } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { ManageUsersDialogComponent } from '../manage-users-dialog/manage-users-dialog.component';
 import { ManageUsersService, User } from '../manage-users.service';
@@ -35,9 +35,12 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './manage-users.component.html',
   styleUrls: ['./manage-users.component.scss']
 })
-export class ManageUsersComponent {
+export class ManageUsersComponent implements OnInit, OnDestroy {
   filter = '';
   _users: User[] = [];
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   get users(): User[] {
     return this._users;
@@ -57,6 +60,17 @@ export class ManageUsersComponent {
       users => this.users = users,
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listUsers().subscribe(us => this.users = us);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   addUser() {

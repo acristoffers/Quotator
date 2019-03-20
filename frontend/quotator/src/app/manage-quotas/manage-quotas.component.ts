@@ -20,10 +20,10 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import * as _ from 'lodash';
-import { timer, zip } from 'rxjs';
+import { timer, zip, Observable, Subscription } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { ManagePolicesService, Policy } from '../manage-polices.service';
 import { ManageQuotasDialogComponent } from '../manage-quotas-dialog/manage-quotas-dialog.component';
@@ -36,11 +36,14 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './manage-quotas.component.html',
   styleUrls: ['./manage-quotas.component.scss']
 })
-export class ManageQuotasComponent {
+export class ManageQuotasComponent implements OnInit, OnDestroy {
   filter = '';
   _quotas: Quota[] = [];
   _users: User[] = [];
   _polices: Policy[] = [];
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   get quotas(): Quota[] {
     return this._quotas;
@@ -86,6 +89,19 @@ export class ManageQuotasComponent {
       },
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listQuotas().subscribe(qs => this.quotas = qs);
+      this.usersService.listUsers().subscribe(us => this.users = us);
+      this.policyService.listPolices().subscribe(ps => this.polices = ps);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   addQuota() {

@@ -20,9 +20,10 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import * as _ from 'lodash';
+import { Observable, Subscription, timer } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { Group, ManageGroupsService } from '../manage-groups.service';
 import { TranslateService } from '../translation/translation.service';
@@ -32,10 +33,13 @@ import { TranslateService } from '../translation/translation.service';
   templateUrl: './manage-groups.component.html',
   styleUrls: ['./manage-groups.component.scss']
 })
-export class ManageGroupsComponent {
+export class ManageGroupsComponent implements OnInit, OnDestroy {
   filter = '';
   newGroup: Group = { 'name': '' };
   _groups: Group[] = [];
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   get groups(): Group[] {
     return this._groups;
@@ -54,6 +58,17 @@ export class ManageGroupsComponent {
       groups => this.groups = groups,
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listGroups().subscribe(gs => this.groups = gs);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   addGroup() {

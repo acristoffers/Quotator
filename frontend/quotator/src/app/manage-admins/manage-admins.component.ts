@@ -20,25 +20,26 @@
  * THE SOFTWARE.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import * as _ from 'lodash';
-import { timer } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
+import { ManageAdminsDialogComponent } from '../manage-admins-dialog/manage-admins-dialog.component';
 import { Admin, ManageAdminsService } from '../manage-admins.service';
 import { TranslateService } from '../translation/translation.service';
-import { ManageAdminsDialogComponent } from '../manage-admins-dialog/manage-admins-dialog.component';
-import { ConnectService } from '../connect.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'q-manage-admins',
   templateUrl: './manage-admins.component.html',
   styleUrls: ['./manage-admins.component.scss']
 })
-export class ManageAdminsComponent {
+export class ManageAdminsComponent implements OnInit, OnDestroy {
   filter = '';
   _users: Admin[] = [];
+
+  private timer: Observable<number>;
+  private timerSubscription: Subscription;
 
   get users(): Admin[] {
     return this._users;
@@ -58,6 +59,17 @@ export class ManageAdminsComponent {
       users => this.users = users,
       this.httpError()
     );
+  }
+
+  ngOnInit() {
+    this.timer = timer(1000, 1000);
+    this.timerSubscription = this.timer.subscribe(() => {
+      this.service.listAdmins().subscribe(us => this.users = us);
+    });
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe();
   }
 
   addUser() {
