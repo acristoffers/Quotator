@@ -25,6 +25,7 @@ import os
 import shutil
 import subprocess
 import time
+import uuid
 
 from pymongo import MongoClient
 
@@ -33,8 +34,11 @@ db = client.quotator
 
 
 def print_file(user, file):
-    cmd = ['/sbin/runuser', '-u', user, '/usr/bin/lp', '-o', 'media=A4', file]
+    tmp = '/tmp/swipe-' + uuid.uuid4().hex + '.pdf'
+    shutil.copyfile(file, tmp)
+    cmd = ['/sbin/runuser', '-u', user, '/usr/bin/lp -o media=A4 ' + tmp]
     p = subprocess.Popen(cmd)
+    os.remove(tmp)
     p.wait()
 
 
