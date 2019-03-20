@@ -38,11 +38,11 @@ echo 'DenyGroups nologin\nPermitRootLogin no' | sudo tee -a /etc/ssh/sshd_config
 
 pushd ~
 tee -a .bashrc << EOF
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+if [ -d "\$HOME/bin" ] ; then
+    PATH="\$HOME/bin:\$PATH"
 fi
 
-if [[ $- == *i* ]]
+if [[ \$- == *i* ]]
 then
     bind '"\e[A": history-search-backward'
     bind '"\e[B": history-search-forward'
@@ -78,7 +78,7 @@ sudo apt install -y samba smbclient
 sudo tee /etc/samba/smb.conf << EOF
 [global]
   printing = cups
-  printcap = cups
+  printcap name = cups
   rpc_server:spoolss = external
   rpc_daemon:spoolssd = fork
   security = user
