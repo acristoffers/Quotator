@@ -6,7 +6,7 @@
       </mat-card-title>
       <mat-card-content>
         <mat-tab-group [dynamicHeight]="true" mat-stretch-tabs>
-          <mat-tab [label]="'Reports' | translate">
+          <mat-tab #reportsTable [label]="'Reports' | translate">
             <table mat-table [dataSource]="reportsDataSource" class="mat-elevation-z8">
               <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> {{ 'Action' | translate }} </th>
@@ -34,7 +34,7 @@
             <mat-paginator #resourcesPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
           </mat-tab>
 
-          <mat-tab [label]="'Jobs' | translate">
+          <mat-tab #jobsTable [label]="'Jobs' | translate">
             <table mat-table [dataSource]="jobsDataSource" class="mat-elevation-z8" id="jobs">
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef> Status </th>

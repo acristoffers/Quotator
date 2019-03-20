@@ -21,7 +21,7 @@
  */
 
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSnackBar, MatTableDataSource, MatTable } from '@angular/material';
 import * as _ from 'lodash';
 import { Observable, Subscription, timer } from 'rxjs';
 import { Job, JobsService } from '../jobs.service';
@@ -40,6 +40,7 @@ export class JobsComponent implements AfterViewInit, OnInit, OnDestroy {
   private timerSubscription: Subscription;
 
   @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('jobsTable') jobsTable: MatTable<any>;
 
   constructor(
     private service: JobsService,
@@ -61,6 +62,7 @@ export class JobsComponent implements AfterViewInit, OnInit, OnDestroy {
       this.service.listJobs().subscribe(jobs => {
         jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
         this.dataSource.data = _.orderBy(jobs, 'time', 'desc');
+        this.jobsTable.renderRows();
       });
     });
   }

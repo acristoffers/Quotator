@@ -21,7 +21,7 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSnackBar, MatTableDataSource, MatTable } from '@angular/material';
 import * as _ from 'lodash';
 import { Observable, Subscription, timer } from 'rxjs';
 import { Job, JobsService } from '../jobs.service';
@@ -45,6 +45,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   @ViewChild('resourcesPaginator') reportsPaginator: MatPaginator;
   @ViewChild('jobsPaginator') jobsPaginator: MatPaginator;
+  @ViewChild('reportsTable') reportsTable: MatTable<any>;
+  @ViewChild('jobsTable') jobsTable: MatTable<any>;
 
   constructor(
     private service: ReportsService,
@@ -63,7 +65,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.jobService.listJobs().subscribe(
       jobs => {
         jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
-        return this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc');
+        this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc');
       },
       this.httpError()
     );
@@ -79,6 +81,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
         reports => {
           reports = _.map(reports, r => _.assign(r, { time: new Date(r.time * 1000) }));
           this.reportsDataSource.data = _.orderBy(reports, 'time', 'desc');
+          this.reportsTable.renderRows();
         },
         this.httpError()
       );
@@ -86,7 +89,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
       this.jobService.listJobs().subscribe(
         jobs => {
           jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
-          return this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc');
+          this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc');
+          this.jobsTable.renderRows();
         },
         this.httpError()
       );
