@@ -33,7 +33,7 @@ db = client.quotator
 
 
 def print_file(user, file):
-    cmd = ['/sbin/runuser', '-u', user, '/usr/bin/lp', file]
+    cmd = ['/sbin/runuser', '-u', user, '/usr/bin/lp', '-o', 'media=A4', file]
     p = subprocess.Popen(cmd)
     p.wait()
 
