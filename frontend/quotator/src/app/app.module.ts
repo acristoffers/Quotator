@@ -29,6 +29,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app/app.component';
 import { ConnectComponent } from './connect/connect.component';
+import { JobsComponent } from './jobs/jobs.component';
+import { ManageAdminsDialogComponent } from './manage-admins-dialog/manage-admins-dialog.component';
+import { ManageAdminsComponent } from './manage-admins/manage-admins.component';
+import { ManageGroupsComponent } from './manage-groups/manage-groups.component';
+import { ManagePolicesDialogComponent } from './manage-polices-dialog/manage-polices-dialog.component';
+import { ManagePolicesComponent } from './manage-polices/manage-polices.component';
+import { ManageQuotasDialogComponent } from './manage-quotas-dialog/manage-quotas-dialog.component';
+import { ManageQuotasComponent } from './manage-quotas/manage-quotas.component';
+import { ManageUsersDialogComponent } from './manage-users-dialog/manage-users-dialog.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { QuotaComponent } from './quota/quota.component';
+import { ReportsComponent } from './reports/reports.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { TRANSLATION_PROVIDERS } from './translation/translation';
@@ -36,22 +48,24 @@ import { TranslatePipe } from './translation/translation.pipe';
 import { TranslateService } from './translation/translation.service';
 
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule,
-  MatIconModule, MatInputModule, MatListModule, MatSelectModule,
-  MatSidenavModule, MatSnackBarModule, MatToolbarModule, MatMenuModule, MatSlideToggleModule, MatTableModule, MatTabsModule, MatPaginatorModule
+  MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatDialogModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSnackBarModule,
+  MatToolbarModule,
+  MatMenuModule,
+  MatSlideToggleModule,
+  MatTableModule,
+  MatTabsModule,
+  MatPaginatorModule
 } from '@angular/material';
-import { ManageGroupsComponent } from './manage-groups/manage-groups.component';
-import { ManagePolicesComponent } from './manage-polices/manage-polices.component';
-import { ManagePolicesDialogComponent } from './manage-polices-dialog/manage-polices-dialog.component';
-import { ManageUsersComponent } from './manage-users/manage-users.component';
-import { ManageUsersDialogComponent } from './manage-users-dialog/manage-users-dialog.component';
-import { ManageAdminsComponent } from './manage-admins/manage-admins.component';
-import { ManageAdminsDialogComponent } from './manage-admins-dialog/manage-admins-dialog.component';
-import { ManageQuotasDialogComponent } from './manage-quotas-dialog/manage-quotas-dialog.component';
-import { ManageQuotasComponent } from './manage-quotas/manage-quotas.component';
-import { QuotaComponent } from './quota/quota.component';
-import { JobsComponent } from './jobs/jobs.component';
-import { ReportsComponent } from './reports/reports.component';
+
 
 @NgModule({
   declarations: [

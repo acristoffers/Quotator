@@ -58,7 +58,10 @@ export class JobsComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit() {
     this.timer = timer(1000, 1000);
     this.timerSubscription = this.timer.subscribe(() => {
-      this.service.listJobs().subscribe(js => this.dataSource.data = js);
+      this.service.listJobs().subscribe(jobs => {
+        jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
+        this.dataSource.data = _.orderBy(jobs, 'time', 'desc');
+      });
     });
   }
 

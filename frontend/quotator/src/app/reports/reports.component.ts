@@ -75,8 +75,21 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
     this.timer = timer(1000, 1000);
     this.timerSubscription = this.timer.subscribe(() => {
-      this.service.listReports().subscribe(rs => this.reportsDataSource.data = rs);
-      this.jobService.listJobs().subscribe(js => this.jobsDataSource.data = js);
+      this.service.listReports().subscribe(
+        reports => {
+          reports = _.map(reports, r => _.assign(r, { time: new Date(r.time * 1000) }));
+          this.reportsDataSource.data = _.orderBy(reports, 'time', 'desc');
+        },
+        this.httpError()
+      );
+
+      this.jobService.listJobs().subscribe(
+        jobs => {
+          jobs = _.map(jobs, r => _.assign(r, { time: new Date(r.time * 1000) }));
+          return this.jobsDataSource.data = _.orderBy(jobs, 'time', 'desc');
+        },
+        this.httpError()
+      );
     });
   }
 

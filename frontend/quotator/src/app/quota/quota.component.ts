@@ -20,12 +20,12 @@
  * THE SOFTWARE.
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import * as _ from 'lodash';
+import { Observable, Subscription, timer } from 'rxjs';
 import { ManageQuotasService, Quota } from '../manage-quotas.service';
 import { TranslateService } from '../translation/translation.service';
-import { Observable, Subscription, timer } from 'rxjs';
 
 
 @Component({
@@ -50,8 +50,7 @@ export class QuotaComponent implements OnInit, OnDestroy {
   constructor(
     private service: ManageQuotasService,
     private i18n: TranslateService,
-    private toast: MatSnackBar,
-    private dialog: MatDialog,
+    private toast: MatSnackBar
   ) {
     this.service.getQuota().subscribe(
       quotas => this.quotas = quotas,
@@ -62,7 +61,7 @@ export class QuotaComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.timer = timer(1000, 1000);
     this.timerSubscription = this.timer.subscribe(() => {
-      this.service.listQuotas().subscribe(qs => this.quotas = qs);
+      this.service.getQuota().subscribe(qs => this.quotas = qs);
     });
   }
 
