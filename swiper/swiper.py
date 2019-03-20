@@ -36,7 +36,7 @@ db = client.quotator
 def print_file(user, file):
     tmp = '/tmp/swipe-' + uuid.uuid4().hex + '.pdf'
     shutil.copyfile(file, tmp)
-    cmd = ['/sbin/runuser', '-u', user, '/usr/bin/lp -o media=A4 ' + tmp]
+    cmd = ['/sbin/runuser', '-u', user, '-c', '/usr/bin/lp -o media=A4 ' + tmp]
     p = subprocess.Popen(cmd)
     os.remove(tmp)
     p.wait()
