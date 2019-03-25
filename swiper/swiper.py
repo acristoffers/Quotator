@@ -29,15 +29,20 @@ import uuid
 
 from pymongo import MongoClient
 
+import cups
+
 client = MongoClient()
 db = client.quotator
 
 
 def print_file(user, file):
-    cmd = [
-        '/sbin/runuser', '-u', user, '--', '/usr/bin/lp', '-o', 'media=A4',
-        file
-    ]
+    conn = cups.Connection()
+    ps = conn.getPrinters()
+    ps = list(ps.keys())
+    opts = ['-o', 'media=a4', '-o', 'raw']
+    if os.path.basename(file).lower().replace('.pdf', '') in ps:
+        opts += ['-d', os.path.basename(file).lower().replace('.pdf', '')]
+    cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *opts, file]
     p = subprocess.Popen(cmd)
     p.wait()
 
