@@ -36,15 +36,21 @@ db = client.quotator
 
 
 def print_file(user, file):
+    fout = file.replace('.pdf', '.ps')
+    gsopts = [
+        '-dNOPAUSE', '-dBATCH', '-sDEVICE=ps2write', f'-sOutputFile={fout}'
+    ]
+    cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/gs', *gsopts, file]
+    p = subprocess.Popen(cmd)
+    p.wait()
     conn = cups.Connection()
     ps = conn.getPrinters()
     ps = list(ps.keys())
-    opts = ['-o', 'media=a4']
-    if os.path.basename(file).lower().replace('.pdf', '') in ps:
-        opts += ['-d', os.path.basename(file).lower().replace('.pdf', '')]
-    cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *opts, file]
+    lpopts = ['-o', 'media=A4']
+    cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, file]
     p = subprocess.Popen(cmd)
     p.wait()
+    remove(fout)
 
 
 def remove(file):
