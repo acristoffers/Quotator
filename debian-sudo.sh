@@ -162,7 +162,7 @@ umask 000
 
 sudo apt install -y build-essential libssl-dev libffi-dev libcups2-dev curl \
                     libbz2-dev nginx openssl mongodb python3 python3-pip \
-                    pkpgcounter
+                    pkpgcounter python3-cups
 
 sudo pip3 install pymongo
 

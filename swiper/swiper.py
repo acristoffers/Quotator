@@ -50,7 +50,7 @@ def print_file(user, file):
     lpopts = ['-o', 'media=A4']
     m = re.search('copias=([0-9]+)', file)
     if m:
-        lpopts += ['-n', m[1]]
+        lpopts += ['-n', m.groups(1)[0]]
     if 'dupla-face' in file:
         lpopts += ['-o', 'sides=two-sided-long-edge']
     m = [p for p in ps if ps in file]
