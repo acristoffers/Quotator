@@ -94,6 +94,10 @@ sudo systemctl restart quotator
 sudo systemctl restart nginx
 sudo systemctl restart quotator-swiper
 
+sudo systemctl enable quotator
+sudo systemctl enable nginx
+sudo systemctl enable quotator-swiper
+
 sudo cp cups-backend/quotator.py /usr/lib/cups/backend/quotator
 sudo chmod 700 /usr/lib/cups/backend/*
 
