@@ -39,7 +39,7 @@ def print_file(user, file):
     conn = cups.Connection()
     ps = conn.getPrinters()
     ps = list(ps.keys())
-    opts = ['-o', 'media=a4', '-o', 'raw']
+    opts = ['-o', 'media=a4']
     if os.path.basename(file).lower().replace('.pdf', '') in ps:
         opts += ['-d', os.path.basename(file).lower().replace('.pdf', '')]
     cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *opts, file]
