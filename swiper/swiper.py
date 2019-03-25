@@ -47,7 +47,7 @@ def print_file(user, file):
     conn = cups.Connection()
     ps = conn.getPrinters()
     ps = list(ps.keys())
-    lpopts = ['-o', 'media=A4', '-t', os.path.basename(file), '-o', 'raw']
+    lpopts = ['-o', 'media=A4', '-t', os.path.basename(file)]
     m = re.search('copias=([0-9]+)', file)
     if m:
         lpopts += ['-n', m.groups(1)[0]]
@@ -57,6 +57,7 @@ def print_file(user, file):
     if m:
         lpopts += ['-d', max(m)]
     cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, fout]
+    print('Printing: ', lpopts)
     p = subprocess.Popen(cmd)
     p.wait()
     remove(fout)
