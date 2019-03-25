@@ -53,7 +53,7 @@ def print_file(user, file):
         lpopts += ['-n', m.groups(1)[0]]
     if 'dupla-face' in file:
         lpopts += ['-o', 'sides=two-sided-long-edge']
-    m = [p for p in ps if ps in file]
+    m = [p for p in ps if p in file]
     if m:
         lpopts += ['-d', max(m)]
     cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, fout]
