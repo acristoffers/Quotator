@@ -37,6 +37,7 @@ db = client.quotator
 
 
 def print_file(user, file):
+    copies = 1
     fout = os.path.dirname(file) + '/' + uuid.uuid4().hex + '.ps'
     gsopts = [
         '-dNOPAUSE', '-dBATCH', '-sDEVICE=ps2write', '-sOutputFile=' + fout
@@ -50,16 +51,17 @@ def print_file(user, file):
     lpopts = ['-o', 'media=A4', '-t', os.path.basename(file)]
     m = re.search('copias=([0-9]+)', file)
     if m:
-        lpopts += ['-n', m.groups(1)[0]]
+        copies = int(m.groups(1)[0])
     if 'dupla-face' in file:
         lpopts += ['-o', 'sides=two-sided-long-edge']
     m = [p for p in ps if p in file]
     if m:
         lpopts += ['-d', max(m)]
-    cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, fout]
-    print('Printing: ', lpopts)
-    p = subprocess.Popen(cmd)
-    p.wait()
+    while copies > 0:
+        copies -= 1
+        cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, fout]
+        p = subprocess.Popen(cmd)
+        p.wait()
     remove(fout)
 
 
