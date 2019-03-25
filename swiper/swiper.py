@@ -37,9 +37,9 @@ db = client.quotator
 
 
 def print_file(user, file):
-    fout = file.replace('.pdf', '.ps')
+    fout = uuid.uuid4().hex + '.ps'
     gsopts = [
-        '-dNOPAUSE', '-dBATCH', '-sDEVICE=ps2write', f'-sOutputFile={fout}'
+        '-dNOPAUSE', '-dBATCH', '-sDEVICE=ps2write', '-sOutputFile=' + fout
     ]
     cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/gs', *gsopts, file]
     p = subprocess.Popen(cmd)
@@ -56,7 +56,7 @@ def print_file(user, file):
     m = [p for p in ps if ps in file]
     if m:
         lpopts += ['-d', max(m)]
-    cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, file]
+    cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, fout]
     p = subprocess.Popen(cmd)
     p.wait()
     remove(fout)
