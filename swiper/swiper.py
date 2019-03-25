@@ -37,7 +37,7 @@ db = client.quotator
 
 
 def print_file(user, file):
-    fout = uuid.uuid4().hex + '.ps'
+    fout = os.path.dirname(file) + '/' + uuid.uuid4().hex + '.ps'
     gsopts = [
         '-dNOPAUSE', '-dBATCH', '-sDEVICE=ps2write', '-sOutputFile=' + fout
     ]
