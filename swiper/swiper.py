@@ -22,6 +22,7 @@
 # THE SOFTWARE.
 
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -47,6 +48,14 @@ def print_file(user, file):
     ps = conn.getPrinters()
     ps = list(ps.keys())
     lpopts = ['-o', 'media=A4']
+    m = re.search('copias=([0-9]+)', file)
+    if m:
+        lpopts += ['-n', m[1]]
+    if 'dupla-face' in file:
+        lpopts += ['-o', 'sides=two-sided-long-edge']
+    m = [p for p in ps if ps in file]
+    if m:
+        lpopts += ['-d', max(m)]
     cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, file]
     p = subprocess.Popen(cmd)
     p.wait()
