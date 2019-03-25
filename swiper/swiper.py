@@ -47,7 +47,7 @@ def print_file(user, file):
     conn = cups.Connection()
     ps = conn.getPrinters()
     ps = list(ps.keys())
-    lpopts = ['-o', 'media=A4']
+    lpopts = ['-o', 'media=A4', '-t', os.path.basename(file)]
     m = re.search('copias=([0-9]+)', file)
     if m:
         lpopts += ['-n', m.groups(1)[0]]
