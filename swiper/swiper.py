@@ -38,9 +38,9 @@ db = client.quotator
 
 def print_file(user, file):
     copies = 1
-    fout = os.path.dirname(file) + '/' + uuid.uuid4().hex + '.pdf'
+    fout = os.path.dirname(file) + '/' + uuid.uuid4().hex + '.ps'
     gsopts = [
-        '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-sPAPERSIZE=a4',
+        '-dNOPAUSE', '-dBATCH', '-sDEVICE=ps2write', '-sPAPERSIZE=a4',
         '-sOutputFile=' + fout
     ]
     cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/gs', *gsopts, file]
