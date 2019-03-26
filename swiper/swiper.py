@@ -38,9 +38,9 @@ db = client.quotator
 
 def print_file(user, file):
     copies = 1
-    fout = os.path.dirname(file) + '/' + uuid.uuid4().hex + '.ps'
+    fout = os.path.dirname(file) + '/' + uuid.uuid4().hex + '.pdf'
     gsopts = [
-        '-dNOPAUSE', '-dBATCH', '-sDEVICE=ps2write', '-sOutputFile=' + fout
+        '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-sPAPERSIZE=a4', '-sOutputFile=' + fout
     ]
     cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/gs', *gsopts, file]
     p = subprocess.Popen(cmd)
@@ -49,6 +49,7 @@ def print_file(user, file):
     ps = conn.getPrinters()
     ps = list(ps.keys())
     lpopts = ['-o', 'media=A4', '-t', os.path.basename(file)]
+    lpopts += ['-o', 'page-left=0 page-right=0 page-top=0 page-bottom=0 scaling=94']
     m = re.search('copias=([0-9]+)', file)
     if m:
         copies = int(m.groups(1)[0])
@@ -60,6 +61,7 @@ def print_file(user, file):
     while copies > 0:
         copies -= 1
         cmd = ['/sbin/runuser', '-u', user, '--', '/usr/bin/lp', *lpopts, fout]
+        print(cmd)
         p = subprocess.Popen(cmd)
         p.wait()
     remove(fout)
