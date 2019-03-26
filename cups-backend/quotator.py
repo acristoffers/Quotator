@@ -146,7 +146,7 @@ def main(argv):
         printer = os.environ['PRINTER']
         if auth_mongodb(cupsuser, pages * int(jobcopies), printer):
             cmd = os.path.join(cwd, next_backend.split(':')[0])
-            args = jobid, cupsuser, jobtitle, 1, joboptions, jobfile
+            args = jobid, cupsuser, jobtitle, '1', joboptions, jobfile
             db.jobs.insert_one({
                 'status': 'sucess',
                 'user': cupsuser,
