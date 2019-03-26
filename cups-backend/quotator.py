@@ -132,7 +132,6 @@ def main(argv):
         next_backend = os.environ['DEVICE_URI'].replace(cwf + ':', '')
         os.environ['DEVICE_URI'] = next_backend
         _, jobid, cupsuser, jobtitle, jobcopies, joboptions, *jobfile = argv
-        jobcopies = int(jobcopies)
         if jobfile:
             jobfile = jobfile[0]
         else:
@@ -143,12 +142,11 @@ def main(argv):
             with open(jobfile, 'wb+') as f:
                 f.write(data)
                 f.flush()
-        pages = jobcopies * count_pages(jobfile)
+        pages = int(count_pages(jobfile) / int(jobcopies))
         printer = os.environ['PRINTER']
-        if auth_mongodb(cupsuser, pages, printer):
+        if auth_mongodb(cupsuser, pages * int(jobcopies), printer):
             cmd = os.path.join(cwd, next_backend.split(':')[0])
-            args = jobid, cupsuser, jobtitle, str(
-                jobcopies), joboptions, jobfile
+            args = jobid, cupsuser, jobtitle, 1, joboptions, jobfile
             db.jobs.insert_one({
                 'status': 'sucess',
                 'user': cupsuser,
