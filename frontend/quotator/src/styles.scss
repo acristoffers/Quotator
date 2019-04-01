@@ -34,7 +34,6 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 }
 
 * {
-  @include user-select(none);
   padding: 0;
   margin: 0;
 }
