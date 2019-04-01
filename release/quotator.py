@@ -101,7 +101,7 @@ crud('group', 'manage_users')
 crud('policy', 'manage_users')
 crud('user', 'manage_users')
 crud('admin', 'manage_admins')
-crud('quota', 'manage_admins')
+crud('quota', 'manage_quotas')
 
 
 @app.after_request
