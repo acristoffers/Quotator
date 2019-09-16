@@ -339,7 +339,7 @@ sudo tee /opt/user_add << EOF
 # \$2 full name
 # \$3 password
 
-sudo adduser --disabled-password --shell /bin/false --gecos "\$2,,,," \$1
+sudo adduser --disabled-password --force-badname --shell /bin/false --gecos "\$2,,,," \$1
 sudo usermod -aG samba \$1
 sudo usermod -aG nologin \$1
 (echo \$3; echo \$3) | sudo smbpasswd -s -a \$1
