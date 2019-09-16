@@ -198,6 +198,7 @@ class Database(object):
         return self.db.polices.find_one({'_id': _id})
 
     def user_add(self, user):
+        user['username'] = user['username'].strip()
         p = self.db.users.find_one({'username': user['username']})
         if p:
             return
