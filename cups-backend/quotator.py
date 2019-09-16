@@ -79,7 +79,9 @@ def list_wrapped():
 
 
 def auth_mongodb(username, page_count, printer):
-    user = db.users.find_one({'username': username})
+    user = db.users.find_one(
+        {'username': {'$regex': username, '$options': 'i'}
+         })
     if not user:
         return False
     ps = list(
